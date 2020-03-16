@@ -1,15 +1,16 @@
 package com.lockboxlocal.entity;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class Model {
 
     Connection conn = null;
 
+    /**
+     * Retrieves and returns all boxes from the database.
+     * @return A list of the boxes' names.
+     */
     public ArrayList<String> getBoxes() {
 
         ArrayList<String> result = new ArrayList<String>();
@@ -33,6 +34,24 @@ public class Model {
         }
 
         return result;
+
+    }
+
+    /**
+     * Removes a box with a given name from the database.
+     * @param boxName the box to delete from the database.
+     */
+    public void deleteBox(String boxName) {
+
+        try {
+
+            PreparedStatement stmt = conn.prepareStatement("delete from Boxes where boxName = ?");
+            stmt.setString(1, boxName);
+            stmt.executeUpdate();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 

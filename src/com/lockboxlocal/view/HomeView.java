@@ -34,11 +34,16 @@ public class HomeView extends Scene {
 
     Model model;
 
+    /**
+     * Retrieves all boxes from the SQLite database and
+     * replaces the listView's contents with them.
+     */
     private void retrieveBoxes() {
 
-        boxList.getItems().removeAll();
+        boxList.getItems().clear();
         ArrayList<String> boxes = model.getBoxes();
         boxList.getItems().addAll(boxes);
+        boxList.refresh();
 
     }
 
@@ -90,6 +95,8 @@ public class HomeView extends Scene {
                     errorMsg.setManaged(true);
                 } else {
                     errorMsg.setManaged(false);
+                    model.deleteBox(selection);
+                    retrieveBoxes();
                 }
 
             }
