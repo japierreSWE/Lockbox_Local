@@ -1,13 +1,25 @@
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
+import com.lockboxlocal.entity.Model;
+import com.lockboxlocal.view.HomeView;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
-public class Main {
+public class Main extends Application {
 
-    public static void main(String[] args) {
+    public void start(Stage primaryStage) throws Exception {
 
         Model model = new Model();
+        VBox root = new VBox(7);
+        HomeView hv = new HomeView(root);
+        primaryStage.setTitle("Lockbox Local");
+        primaryStage.setScene(hv);
+        primaryStage.show();
 
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 
 }
