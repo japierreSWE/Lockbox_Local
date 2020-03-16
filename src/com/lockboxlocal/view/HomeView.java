@@ -18,7 +18,7 @@ public class HomeView extends Scene {
     Button importButton = new Button("Import Boxes");
 
     Label listLabel = new Label("Lockboxes:");
-    ListView boxList = new ListView();
+    ListView<String> boxList = new ListView<String>();
 
     HBox buttonContainer = new HBox(7);
 
