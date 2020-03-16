@@ -1,5 +1,6 @@
 import com.lockboxlocal.entity.Model;
 import com.lockboxlocal.view.HomeView;
+import com.lockboxlocal.view.View;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
@@ -10,10 +11,9 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         Model model = new Model();
-        VBox root = new VBox(7);
-        HomeView hv = new HomeView(root);
+        View view = new View(model);
         primaryStage.setTitle("Lockbox Local");
-        primaryStage.setScene(hv);
+        primaryStage.setScene(view.getHomeView());
         primaryStage.show();
 
     }

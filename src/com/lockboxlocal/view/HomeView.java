@@ -1,5 +1,8 @@
 package com.lockboxlocal.view;
 
+import com.lockboxlocal.entity.Model;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -8,6 +11,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import java.util.ArrayList;
 
 public class HomeView extends Scene {
 
@@ -22,8 +27,19 @@ public class HomeView extends Scene {
 
     HBox buttonContainer = new HBox(7);
 
-    public HomeView(VBox parent) {
+    Model model;
+
+    private void retrieveBoxes() {
+
+        ArrayList<String> boxes = model.getBoxes();
+        boxList.getItems().addAll(boxes);
+
+    }
+
+    public HomeView(VBox parent, Model model) {
         super(parent, 450, 350);
+
+        this.model = model;
 
         //Set margin here.
         parent.setPadding(new Insets(20, 20, 20, 20));
@@ -41,5 +57,7 @@ public class HomeView extends Scene {
         parent.getChildren().add(listLabel);
         parent.getChildren().add(boxList);
 
+
+        retrieveBoxes();
     }
 }
