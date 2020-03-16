@@ -6,9 +6,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -16,6 +14,7 @@ import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class HomeView extends Scene {
 
@@ -95,8 +94,17 @@ public class HomeView extends Scene {
                     errorMsg.setManaged(true);
                 } else {
                     errorMsg.setManaged(false);
-                    model.deleteBox(selection);
-                    retrieveBoxes();
+
+                    Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+                    confirm.setTitle("Confirm Deletion");
+                    confirm.setHeaderText("Confirm Deletion");
+                    confirm.setContentText("Are you sure you want to delete this lockbox? You won't be able to recover it after deleting it.");
+                    Optional<ButtonType> result = confirm.showAndWait();
+
+                    if(result.get() == ButtonType.OK) {
+                        model.deleteBox(selection);
+                        retrieveBoxes();
+                    }
                 }
 
             }
