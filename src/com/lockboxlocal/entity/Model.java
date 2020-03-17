@@ -104,7 +104,7 @@ public class Model {
             stmt.setString(2, contents);
             stmt.setInt(3, 1);
             stmt.setInt(4, 0);
-            stmt.setInt(5, 0);
+            stmt.setNull(5, Types.INTEGER);
 
             stmt.setInt(6, unlockDelay);
             stmt.setInt(7, relockDelay);
