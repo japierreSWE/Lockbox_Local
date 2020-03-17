@@ -133,6 +133,13 @@ public class HomeView extends Scene {
                     errorMsg.setManaged(true);
                 } else {
                     errorMsg.setManaged(false);
+                    VBox openRoot = new VBox(5);
+                    Stage secondaryStage = new Stage();
+                    DisplayBoxView dbv = new DisplayBoxView(openRoot, model, selection);
+
+                    secondaryStage.setScene(dbv);
+                    secondaryStage.setTitle("Lockbox Local");
+                    secondaryStage.show();
                 }
 
             }
