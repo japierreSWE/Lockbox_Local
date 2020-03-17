@@ -1,6 +1,8 @@
 package com.lockboxlocal.view;
 
 import com.lockboxlocal.entity.Model;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 public class CreateBoxView extends Scene {
@@ -36,6 +40,93 @@ public class CreateBoxView extends Scene {
     HBox confirmContainer = new HBox();
     Button confirmButton = new Button("Confirm");
 
+    /**
+     * Attempts to create a lockbox, displays
+     * an error if necessary.
+     */
+    private void createLockBox() {
+
+        String name = nameField.getText();
+        String contents = contentsArea.getText();
+        String unlockUnitsStr = unlockNumField.getText();
+        String relockUnitsStr = relockNumField.getText();
+
+        int unlockUnits;
+        int relockUnits;
+
+        try {
+
+            unlockUnits = Integer.parseInt(unlockUnitsStr);
+            relockUnits = Integer.parseInt(relockUnitsStr);
+
+        } catch(Exception e) {
+            relockErrorMsg.setText("Please input valid numbers for the unlock and relock delays.");
+            relockErrorMsg.setManaged(true);
+            return;
+        }
+
+        if(relockUnits > 7 && relockDurationChoice.getValue().equals("days")) {
+            relockErrorMsg.setText("A lockbox can't have a relock delay greater than 7 days.");
+            relockErrorMsg.setManaged(true);
+            return;
+        }
+
+        //start off w/ seconds
+        int relockMultiplier = 1000;
+        int unlockMultiplier = 1000;
+
+        switch(unlockDurationChoice.getValue()) {
+
+            case "seconds":
+                break;
+
+            case "minutes":
+                unlockMultiplier *= 60;
+                break;
+
+            case "hours":
+                unlockMultiplier *= 60 * 60;
+                break;
+
+            case "days":
+                unlockMultiplier *= 60 * 60 * 24;
+                break;
+
+        }
+
+        switch(relockDurationChoice.getValue()) {
+
+            case "seconds":
+                break;
+
+            case "minutes":
+                relockMultiplier *= 60;
+                break;
+
+            case "hours":
+                relockMultiplier *= 60 * 60;
+                break;
+
+            case "days":
+                relockMultiplier *= 60 * 60 * 24;
+                break;
+
+        }
+
+        int relockDelayMillis = relockUnits * relockMultiplier;
+        int unlockDelayMillis = unlockUnits * unlockMultiplier;
+
+        if(model.boxExists(name)) {
+
+            relockErrorMsg.setText("A box with this name already exists.");
+            relockErrorMsg.setManaged(true);
+            return;
+
+        }
+
+
+    }
+
     public CreateBoxView(VBox parent, Model model, Stage enclosingStage) {
 
         super(parent, 450, 400);
@@ -45,6 +136,11 @@ public class CreateBoxView extends Scene {
         //All UI managed below.
         nameErrorMsg.setManaged(false);
         relockErrorMsg.setManaged(false);
+
+        nameErrorMsg.setFont(new Font(10));
+        nameErrorMsg.setTextFill(Color.RED);
+        relockErrorMsg.setFont(new Font(10));
+        relockErrorMsg.setTextFill(Color.RED);
 
         parent.setPadding(new Insets(20, 20, 20, 20));
 
@@ -74,9 +170,19 @@ public class CreateBoxView extends Scene {
 
         parent.getChildren().add(relockErrorMsg);
 
+        //we do this so that the confirm button is in the center.
         parent.getChildren().add(confirmContainer);
         confirmContainer.getChildren().add(confirmButton);
         confirmContainer.setAlignment(Pos.CENTER);
+
+        confirmButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                createLockBox();
+
+            }
+        });
 
     }
 

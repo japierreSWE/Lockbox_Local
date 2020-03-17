@@ -48,10 +48,39 @@ public class Model {
             PreparedStatement stmt = conn.prepareStatement("delete from Boxes where boxName = ?");
             stmt.setString(1, boxName);
             stmt.executeUpdate();
+            stmt.close();
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+    }
+
+    /**
+     * Returns true if a box with a given name already
+     * exists in the database. Returns false otherwise.
+     */
+    public boolean boxExists(String name) {
+
+        boolean result = false;
+
+        try {
+
+            PreparedStatement stmt = conn.prepareStatement("select * from Boxes where boxName = ?");
+            stmt.setString(1, name);
+
+            ResultSet rset = stmt.executeQuery();
+
+            result = rset.next();
+
+            rset.close();
+            stmt.close();
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
 
     }
 

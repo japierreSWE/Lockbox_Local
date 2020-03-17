@@ -19,7 +19,7 @@ import java.util.Optional;
 
 public class HomeView extends Scene {
 
-    Button createButton = new Button("Create");
+    Button createButton = new Button("New");
     Button deleteButton = new Button("Delete");
     Button openButton = new Button("Open");
     Button exportButton = new Button("Export Boxes");
