@@ -13,6 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class CreateBoxView extends Scene {
 
@@ -124,6 +125,8 @@ public class CreateBoxView extends Scene {
 
         }
 
+        model.createBox(name, contents, unlockDelayMillis, relockDelayMillis);
+        enclosingStage.fireEvent(new WindowEvent(enclosingStage, WindowEvent.WINDOW_CLOSE_REQUEST));
 
     }
 

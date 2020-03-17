@@ -84,6 +84,39 @@ public class Model {
 
     }
 
+    /**
+     * Inserts a lockbox into the database.
+     * @param name Name of the lockbox to create.
+     * @param contents Contents of this lockbox.
+     * @param unlockDelay The unlock delay of this lockbox.
+     * @param relockDelay The relock delay of this lockbox.
+     */
+    public void createBox(String name, String contents, int unlockDelay, int relockDelay) {
+
+        try {
+
+            PreparedStatement stmt = conn.prepareStatement("insert into Boxes " +
+                    "(boxName, content, locked, relockTimestamp, unlockTimestamp, unlockDelay, relockDelay)" +
+                    "values" +
+                    "(?,?,?,?,?,?,?)");
+
+            stmt.setString(1, name);
+            stmt.setString(2, contents);
+            stmt.setInt(3, 1);
+            stmt.setInt(4, 0);
+            stmt.setInt(5, 0);
+
+            stmt.setInt(6, unlockDelay);
+            stmt.setInt(7, relockDelay);
+
+            stmt.executeUpdate();
+
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public Model() {
 
         try {

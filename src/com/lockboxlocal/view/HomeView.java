@@ -12,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,6 +79,17 @@ public class HomeView extends Scene {
 
                 secondaryStage.setScene(cbv);
                 secondaryStage.setTitle("Create a New Lockbox");
+
+                //we want to refresh the box list whenever we're done creating a new lockbox
+                secondaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+                    @Override
+                    public void handle(WindowEvent event) {
+
+                        retrieveBoxes();
+
+                    }
+                });
+
                 secondaryStage.show();
 
             }
