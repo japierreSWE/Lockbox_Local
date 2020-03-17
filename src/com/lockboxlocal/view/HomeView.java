@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,14 +72,13 @@ public class HomeView extends Scene {
             @Override
             public void handle(ActionEvent event) {
 
-                String selection = boxList.getSelectionModel().getSelectedItem();
+                VBox createRoot = new VBox(5);
+                Stage secondaryStage = new Stage();
+                CreateBoxView cbv = new CreateBoxView(createRoot, model, secondaryStage);
 
-                if(selection == null) {
-                    errorMsg.setText("No lockbox is selected.");
-                    errorMsg.setManaged(true);
-                } else {
-                    errorMsg.setManaged(false);
-                }
+                secondaryStage.setScene(cbv);
+                secondaryStage.setTitle("Create a New Lockbox");
+                secondaryStage.show();
 
             }
         });

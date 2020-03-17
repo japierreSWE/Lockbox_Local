@@ -11,7 +11,7 @@ public class View {
 
     public View(Model model) {
         this.model = model;
-        hvRoot = new VBox(7);
+        hvRoot = new VBox(9);
         homeView = new HomeView(hvRoot, model);
     }
 
