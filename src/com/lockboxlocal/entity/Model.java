@@ -2,6 +2,7 @@ package com.lockboxlocal.entity;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.concurrent.locks.Lock;
 
 public class Model {
 
@@ -111,7 +112,85 @@ public class Model {
 
             stmt.executeUpdate();
 
+            stmt.close();
+
         } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Returns a box with a given name. Returns null if no
+     * such box exists.
+     * @param name The name of the box to retrieve.
+     */
+    public Lockbox getBox(String name) {
+
+        Lockbox result = null;
+
+        try {
+
+            PreparedStatement stmt = conn.prepareStatement("select * from Boxes where boxName = ?");
+            stmt.setString(1, name);
+
+            ResultSet rset = stmt.executeQuery();
+
+            if(rset.next()) {
+
+                String tempName = rset.getString("boxName");
+                String contents = rset.getString("content");
+                int locked = rset.getInt("locked");
+                long relockTimestamp = rset.getLong("relockTimestamp");
+                Long unlockTimestamp = rset.getLong("unlockTimestamp");
+                long unlockDelay = rset.getLong("unlockDelay");
+                long relockDelay = rset.getLong("relockDelay");
+
+                result = new Lockbox(tempName, contents, locked, relockTimestamp, unlockTimestamp, unlockDelay, relockDelay);
+
+            }
+
+            rset.close();
+            stmt.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+
+    }
+
+    /**
+     * Updates the data of a lockbox in the database.
+     * @param lockbox the lockbox to update.
+     */
+    public void updateBox(Lockbox lockbox) {
+
+        try {
+
+            PreparedStatement stmt = conn.prepareStatement("update Boxes set " +
+                    "content = ?," +
+                    "locked = ?," +
+                    "relockTimestamp = ?," +
+                    "unlockTimestamp = ?" +
+                    " where boxName = ?");
+
+            stmt.setString(1, lockbox.contents);
+            stmt.setInt(2, lockbox.locked);
+            stmt.setLong(3, lockbox.relockTimestamp);
+
+            if(lockbox.unlockTimestamp == null) {
+                stmt.setNull(4, Types.INTEGER);
+            } else {
+                stmt.setLong(4, lockbox.unlockTimestamp);
+            }
+
+            stmt.setString(5, lockbox.name);
+
+            stmt.executeUpdate();
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
