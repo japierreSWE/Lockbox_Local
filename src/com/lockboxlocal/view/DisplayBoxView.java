@@ -36,6 +36,10 @@ public class DisplayBoxView extends Scene {
     Label contentsLabel = new Label("Contents");
     TextArea contentsArea = new TextArea();
 
+    //Whether the box was locked last time we tried to
+    //update the UI.
+    Integer lastStatus;
+
     /**
      * Given a duration of time in milliseconds,
      * returns the largest unit of time
@@ -145,13 +149,15 @@ public class DisplayBoxView extends Scene {
 
         }
 
-        if(currentBox.getLocked() == 1) {
+        boolean statusChanged = lastStatus == null || lastStatus != currentBox.getLocked();
+
+        if(currentBox.getLocked() == 1 && statusChanged) {
             lockStatus.setText("Locked");
             lockStatus.setTextFill(Color.RED);
             contentsArea.setText("-- locked --");
             relockButton.setDisable(true);
             unlockButton.setDisable(false);
-        } else {
+        } else if(currentBox.getLocked() == 0 && statusChanged) {
             lockStatus.setText("Unlocked");
             lockStatus.setTextFill(Color.GREEN);
             contentsArea.setText(currentBox.getContents());
@@ -225,6 +231,7 @@ public class DisplayBoxView extends Scene {
             public void handle(ActionEvent event) {
 
                 updateUI();
+                lastStatus = currentBox.getLocked();
 
             }
         }));
