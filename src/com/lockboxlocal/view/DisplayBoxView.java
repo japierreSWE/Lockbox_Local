@@ -40,65 +40,80 @@ public class DisplayBoxView extends Scene {
     //update the UI.
     Integer lastStatus;
 
-    /**
-     * Given a duration of time in milliseconds,
-     * returns the largest unit of time
-     * it can be converted to and the number of those
-     * units.
-     */
-    private Pair<String, String> getTimeUnitsAndAmount(long duration) {
+    //whether we've already received a request to unlock the box.
+    boolean currentlyUnlocking = false;
 
-        String numUnits = null;
-        String timeUnits = null;
+    /**
+     * From a duration of time, returns it in the format
+     * "x days, x hours, x minutes and x seconds"
+     * @param duration
+     */
+    private String getTimeString(long duration) {
 
         final long secLength = 1000;
         final long minLength = secLength * 60;
         final long hourLength = minLength * 60;
         final long dayLength = hourLength * 24;
 
-        if(duration >= dayLength) {
+        String timeString = "";
+        int count = 0;
 
-            numUnits = String.valueOf(duration / dayLength);
+        long numDays = duration / dayLength;
 
-            if(duration / dayLength == 1) {
-                timeUnits = "day";
+        if(numDays != 0) {
+            duration -= dayLength * numDays;
+            timeString += String.valueOf(numDays);
+
+            if(numDays == 1) {
+                timeString += " day, ";
             } else {
-                timeUnits = "days";
+                timeString += " days, ";
             }
-
-        } else if(duration >= hourLength) {
-
-            numUnits = String.valueOf(duration / hourLength);
-
-            if(duration / hourLength == 1) {
-                timeUnits = "hour";
-            } else {
-                timeUnits = "hours";
-            }
-
-        } else if(duration >= minLength) {
-
-            numUnits = String.valueOf(duration / minLength);
-
-            if(duration / minLength == 1) {
-                timeUnits = "minute";
-            } else {
-                timeUnits = "minutes";
-            }
-
-        } else {
-
-            numUnits = String.valueOf(duration / secLength);
-
-            if(duration / secLength == 1) {
-                timeUnits = "second";
-            } else {
-                timeUnits = "seconds";
-            }
-
+            ++count;
         }
 
-        return new Pair<String, String>(timeUnits, numUnits);
+        long numHours = duration / hourLength;
+
+        if(numHours != 0) {
+            duration -= hourLength * numHours;
+            timeString += String.valueOf(numHours);
+
+            if(numHours == 1) {
+                timeString += " hour, ";
+            } else {
+                timeString += " hours, ";
+            }
+
+            ++count;
+        }
+
+        long numMins = duration / minLength;
+
+        if(numMins != 0) {
+            duration -= minLength * numMins;
+            timeString += String.valueOf(numMins);
+
+            if(numMins == 1) {
+                timeString += " minute, ";
+            } else {
+                timeString += " minutes, ";
+            }
+
+            ++count;
+        }
+
+        long numSeconds = duration / secLength;
+
+
+        timeString += String.valueOf(numSeconds);
+
+        if(numSeconds == 1) {
+            timeString += " second remaining";
+        } else {
+            timeString += " seconds remaining";
+        }
+
+        return timeString;
 
     }
 
@@ -115,13 +130,10 @@ public class DisplayBoxView extends Scene {
             if(currentTimeMillis < currentBox.getUnlockTimestamp()) {
 
                 long diff = currentBox.getUnlockTimestamp() - currentTimeMillis;
-                Pair<String, String> pair = getTimeUnitsAndAmount(diff);
-
-                String numUnits = pair.getValue();
-                String timeUnits = pair.getKey();
+                String timeString = getTimeString(diff);
 
                 timeToLockChange.setManaged(true);
-                timeToLockChange.setText(numUnits + " " + timeUnits + " remaining to unlock.");
+                timeToLockChange.setText(timeString + " to unlock.");
 
             } else if (currentTimeMillis >= currentBox.getUnlockTimestamp()
                     && currentTimeMillis < currentBox.getRelockTimestamp()) {
@@ -130,21 +142,19 @@ public class DisplayBoxView extends Scene {
                 model.updateBox(currentBox);
 
                 long diff = currentBox.getRelockTimestamp() - currentTimeMillis;
-                Pair<String, String> pair = getTimeUnitsAndAmount(diff);
-
-                String numUnits = pair.getValue();
-                String timeUnits = pair.getKey();
+                String timeString = getTimeString(diff);
 
                 timeToLockChange.setManaged(true);
-                timeToLockChange.setText(numUnits + " " + timeUnits + " remaining to relock.");
+                timeToLockChange.setText(timeString + " to relock.");
 
             } else if(currentTimeMillis > currentBox.getRelockTimestamp()) {
 
-                currentBox.setLocked(1);
+                lockBox();
                 model.updateBox(currentBox);
 
                 timeToLockChange.setManaged(false);
                 timeToLockChange.setText("");
+                currentlyUnlocking = false;
             }
 
         }
@@ -199,14 +209,23 @@ public class DisplayBoxView extends Scene {
 
         currentBox = model.getBox(boxName);
 
+        if(currentBox.getUnlockTimestamp() != null) {
+            currentlyUnlocking = true;
+        }
+
         unlockButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
-                currentBox.setUnlockTimestamp(System.currentTimeMillis() + currentBox.getUnlockDelay());
-                currentBox.setRelockTimestamp(currentBox.getUnlockTimestamp() + currentBox.getRelockDelay());
-                model.updateBox(currentBox);
-                updateUI();
+                if(!currentlyUnlocking) {
+
+                    currentBox.setUnlockTimestamp(System.currentTimeMillis() + currentBox.getUnlockDelay());
+                    currentBox.setRelockTimestamp(currentBox.getUnlockTimestamp() + currentBox.getRelockDelay());
+                    model.updateBox(currentBox);
+                    updateUI();
+                    currentlyUnlocking = true;
+
+                }
 
             }
         });
@@ -220,6 +239,7 @@ public class DisplayBoxView extends Scene {
                 timeToLockChange.setManaged(false);
                 timeToLockChange.setText("");
                 updateUI();
+                currentlyUnlocking = false;
 
             }
         });
