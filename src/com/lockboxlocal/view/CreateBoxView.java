@@ -183,10 +183,15 @@ public class CreateBoxView extends Scene {
         nameField.setOnKeyTyped(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if(nameField.getText().contains(" ")) {
+                if(nameField.getText().contains("_")) {
 
                     nameErrorMsg.setManaged(true);
-                    nameErrorMsg.setText("Names should not contain spaces.");
+                    nameErrorMsg.setText("Names cannot contain underscores.");
+
+                } else if(contentsArea.getText().contains("_")) {
+
+                    nameErrorMsg.setManaged(true);
+                    nameErrorMsg.setText("Contents cannot contain underscores.");
 
                 } else {
 
@@ -197,11 +202,36 @@ public class CreateBoxView extends Scene {
             }
         });
 
+        contentsArea.setOnKeyTyped(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+
+                if(nameField.getText().contains("_")) {
+
+                    nameErrorMsg.setManaged(true);
+                    nameErrorMsg.setText("Names cannot contain underscores.");
+
+                } else if(contentsArea.getText().contains("_")) {
+
+                    nameErrorMsg.setManaged(true);
+                    nameErrorMsg.setText("Contents cannot contain underscores.");
+
+                } else {
+
+                    nameErrorMsg.setManaged(false);
+                    nameErrorMsg.setText("");
+
+                }
+
+            }
+        });
+
         confirmButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
-                if(!nameField.getText().contains(" ")) {
+                //neither name nor contents contain underscores
+                if(!nameField.getText().contains("_") && !contentsArea.getText().contains("_")) {
                     createLockBox();
                 }
 

@@ -205,7 +205,7 @@ public class Model {
      * @param filePath The file path where the file will be stored.
      * The structure of the file consists of a series of lines.
      * Each line represents a box. Each line contains a box's
-     * data, string-separated.
+     * data, separated by underscores.
      * Returns whether the export was successful.
      */
     public boolean exportDB(String filePath) {
@@ -234,7 +234,7 @@ public class Model {
                 dataList.add(String.valueOf(rset.getInt("unlockDelay")));
                 dataList.add(String.valueOf(rset.getInt("relockDelay")));
 
-                String line = String.join(" ", dataList);
+                String line = String.join("_", dataList);
                 dataLines.add(line);
 
             }
