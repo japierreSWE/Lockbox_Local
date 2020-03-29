@@ -11,9 +11,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +35,8 @@ public class HomeView extends Scene {
 
     HBox buttonContainer = new HBox(7);
 
+    Stage enclosingStage;
+
     Model model;
 
     /**
@@ -48,7 +52,7 @@ public class HomeView extends Scene {
 
     }
 
-    public HomeView(VBox parent, Model model) {
+    public HomeView(VBox parent, Model model, Stage stage) {
         super(parent, 450, 350);
 
         this.model = model;
@@ -68,6 +72,8 @@ public class HomeView extends Scene {
         buttonContainer.getChildren().add(exportButton);
         buttonContainer.getChildren().add(importButton);
         buttonContainer.setPadding(new Insets(0,0,50,0));
+
+        enclosingStage = stage;
 
         createButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -140,6 +146,24 @@ public class HomeView extends Scene {
                     secondaryStage.setScene(dbv);
                     secondaryStage.setTitle("Lockbox Local");
                     secondaryStage.show();
+                }
+
+            }
+        });
+
+        exportButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                DirectoryChooser directoryChooser = new DirectoryChooser();
+                File file = directoryChooser.showDialog(enclosingStage);
+
+                if(file != null) {
+
+                    String outputPath = file.toString() + "/output.lbf";
+
+                    model.exportDB(outputPath);
+
                 }
 
             }

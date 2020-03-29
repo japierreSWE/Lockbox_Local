@@ -2,6 +2,7 @@ package com.lockboxlocal.view;
 
 import com.lockboxlocal.entity.Model;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 
 public class View {
 
@@ -9,10 +10,10 @@ public class View {
     HomeView homeView;
     VBox hvRoot;
 
-    public View(Model model) {
+    public View(Model model, Stage stage) {
         this.model = model;
         hvRoot = new VBox(9);
-        homeView = new HomeView(hvRoot, model);
+        homeView = new HomeView(hvRoot, model, stage);
     }
 
     public HomeView getHomeView() {

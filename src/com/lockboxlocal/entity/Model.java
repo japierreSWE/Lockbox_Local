@@ -1,5 +1,8 @@
 package com.lockboxlocal.entity;
 
+import java.io.BufferedWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.concurrent.locks.Lock;
@@ -191,6 +194,58 @@ public class Model {
             stmt.executeUpdate();
 
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+     * Exports the database to a file.
+     * @param filePath The file path where the file will be stored.
+     * The structure of the file consists of a series of lines.
+     * Each line represents a box. Each line contains a box's
+     * data, string-separated.
+     */
+    public void exportDB(String filePath) {
+
+        try {
+
+            BufferedWriter writer = Files.newBufferedWriter(Paths.get(filePath));
+
+            PreparedStatement stmt = conn.prepareStatement("select * from Boxes");
+            ResultSet rset = stmt.executeQuery();
+
+            //stores every line of data in the file.
+            //each line represents a box's individual data(name, contents, etc.)
+            ArrayList<String> dataLines = new ArrayList<String>();
+
+            while(rset.next()) {
+
+                //stores the data in an individual line.
+                ArrayList<String> dataList = new ArrayList<String>();
+
+                dataList.add(rset.getString("boxName"));
+                dataList.add(rset.getString("content"));
+                dataList.add(String.valueOf(rset.getInt("locked")));
+                dataList.add(String.valueOf(rset.getInt("relockTimestamp")));
+                dataList.add(String.valueOf(rset.getInt("unlockTimestamp")));
+                dataList.add(String.valueOf(rset.getInt("unlockDelay")));
+                dataList.add(String.valueOf(rset.getInt("relockDelay")));
+
+                String line = String.join(" ", dataList);
+                dataLines.add(line);
+
+            }
+
+            String fileContents = String.join("\n", dataLines);
+            writer.write(fileContents);
+            writer.flush();
+            writer.close();
+
+            stmt.close();
+            rset.close();
+
+        } catch(Exception e) {
             e.printStackTrace();
         }
 

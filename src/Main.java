@@ -11,7 +11,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         Model model = new Model();
-        View view = new View(model);
+        View view = new View(model, primaryStage);
         primaryStage.setTitle("Lockbox Local");
         primaryStage.setScene(view.getHomeView());
         primaryStage.show();
