@@ -8,6 +8,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.InputMethodEvent;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -178,11 +180,30 @@ public class CreateBoxView extends Scene {
         confirmContainer.getChildren().add(confirmButton);
         confirmContainer.setAlignment(Pos.CENTER);
 
+        nameField.setOnKeyTyped(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                if(nameField.getText().contains(" ")) {
+
+                    nameErrorMsg.setManaged(true);
+                    nameErrorMsg.setText("Names should not contain spaces.");
+
+                } else {
+
+                    nameErrorMsg.setManaged(false);
+                    nameErrorMsg.setText("");
+
+                }
+            }
+        });
+
         confirmButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
 
-                createLockBox();
+                if(!nameField.getText().contains(" ")) {
+                    createLockBox();
+                }
 
             }
         });
