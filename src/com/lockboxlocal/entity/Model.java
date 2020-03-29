@@ -1,6 +1,7 @@
 package com.lockboxlocal.entity;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
@@ -205,8 +206,9 @@ public class Model {
      * The structure of the file consists of a series of lines.
      * Each line represents a box. Each line contains a box's
      * data, string-separated.
+     * Returns whether the export was successful.
      */
-    public void exportDB(String filePath) {
+    public boolean exportDB(String filePath) {
 
         try {
 
@@ -244,9 +246,11 @@ public class Model {
 
             stmt.close();
             rset.close();
+            return true;
 
         } catch(Exception e) {
             e.printStackTrace();
+            return false;
         }
 
     }

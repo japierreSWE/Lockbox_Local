@@ -155,16 +155,13 @@ public class HomeView extends Scene {
             @Override
             public void handle(ActionEvent event) {
 
-                DirectoryChooser directoryChooser = new DirectoryChooser();
-                File file = directoryChooser.showDialog(enclosingStage);
+                VBox exportRoot = new VBox(7);
+                Stage secondaryStage = new Stage();
+                ExportView ev = new ExportView(exportRoot, model, secondaryStage);
 
-                if(file != null) {
-
-                    String outputPath = file.toString() + "/output.lbf";
-
-                    model.exportDB(outputPath);
-
-                }
+                secondaryStage.setScene(ev);
+                secondaryStage.setTitle("Export Boxes");
+                secondaryStage.show();
 
             }
         });
