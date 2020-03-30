@@ -12,8 +12,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import javafx.util.Pair;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -166,6 +168,59 @@ public class HomeView extends Scene {
             }
         });
 
+        importButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Lockbox Files (.lbf)", "*.lbf"));
+                fileChooser.setTitle("Select a file to import.");
+
+                File selectedFile = fileChooser.showOpenDialog(enclosingStage);
+
+                if(selectedFile != null) {
+
+                    Alert importAlert = new Alert(Alert.AlertType.WARNING);
+                    importAlert.setTitle("Import Alert");
+                    importAlert.setHeaderText(null);
+                    importAlert.setContentText("No two lockboxes can have the same name. Any lockbox with a name identical to one you've already made will not be imported. Press \"OK\" to continue.");
+
+                    Optional<ButtonType> result =  importAlert.showAndWait();
+
+                    if(result.get() == ButtonType.OK) {
+
+                        Pair<Long, Long> importResult = model.importBoxes(selectedFile);
+
+                        if(importResult.getKey() != -1) {
+
+                            Alert importConfirm = new Alert(Alert.AlertType.INFORMATION);
+                            importConfirm.setTitle("Import Complete");
+                            importConfirm.setHeaderText(null);
+                            importConfirm.setContentText(String.valueOf(importResult.getKey()) +
+                                    " boxes found in import file. " + String.valueOf(importResult.getValue()) +
+                                    " were successfully imported.");
+
+                            importConfirm.showAndWait();
+                            retrieveBoxes();
+
+                        } else {
+
+                            Alert importConfirm = new Alert(Alert.AlertType.ERROR);
+                            importConfirm.setTitle("Error");
+                            importConfirm.setHeaderText(null);
+                            importConfirm.setContentText("Something went wrong while importing.");
+
+                            importConfirm.showAndWait();
+                            retrieveBoxes();
+
+                        }
+
+                    }
+
+                }
+
+            }
+        });
 
         //Managing list area.
         parent.getChildren().add(listLabel);

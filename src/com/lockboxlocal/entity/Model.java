@@ -1,5 +1,8 @@
 package com.lockboxlocal.entity;
 
+import javafx.util.Pair;
+
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.nio.file.Files;
@@ -201,6 +204,72 @@ public class Model {
     }
 
     /**
+     * Import the data from a .lbf file, inserting
+     * its data into the model's database.
+     * Returns the following pair:
+     * (number of boxes in file, number of boxes successfully imported)
+     * Returns (-1,-1) if there is an issue
+     */
+    public Pair<Long,Long> importBoxes(File importFile) {
+
+        try {
+
+            BufferedReader reader = Files.newBufferedReader(Paths.get(importFile.getAbsolutePath()));
+            long totalLines = 0;
+            long insertedBoxes = 0;
+
+            String line = reader.readLine();
+
+            while(line != null) {
+
+                ++totalLines;
+
+                String[] dataArr = line.split("_");
+
+                PreparedStatement existenceStmt = conn.prepareStatement("select * from boxes where boxName = ?");
+                existenceStmt.setString(1, dataArr[0]);
+
+                ResultSet existsResultSet = existenceStmt.executeQuery();
+
+                //we only do this if it doesn't exist yet.
+                if(!existsResultSet.next()) {
+
+                    PreparedStatement stmt = conn.prepareStatement("insert into Boxes " +
+                            "(boxName, content, locked, relockTimestamp, unlockTimestamp, unlockDelay, relockDelay)" +
+                            "values" +
+                            "(?,?,?,?,?,?,?)");
+
+                    stmt.setString(1, dataArr[0]);
+                    stmt.setString(2, dataArr[1]);
+                    stmt.setInt(3, Integer.parseInt(dataArr[2]));
+                    stmt.setInt(4, Integer.parseInt(dataArr[3]));
+                    stmt.setInt(5, Integer.parseInt(dataArr[4]));
+                    stmt.setInt(6, Integer.parseInt(dataArr[5]));
+                    stmt.setInt(7, Integer.parseInt(dataArr[6]));
+
+                    stmt.executeUpdate();
+                    stmt.close();
+                    ++insertedBoxes;
+
+                }
+
+                existenceStmt.close();
+                existsResultSet.close();
+
+                line = reader.readLine();
+
+            }
+
+            return new Pair<Long,Long>(totalLines, insertedBoxes);
+
+        } catch(Exception e) {
+            e.printStackTrace();
+            return new Pair<Long, Long>(-1l,-1l);
+        }
+
+    }
+
+    /**
      * Exports the database to a file.
      * @param filePath The file path where the file will be stored.
      * The structure of the file consists of a series of lines.
@@ -254,6 +323,8 @@ public class Model {
         }
 
     }
+
+
 
     public Model() {
 
