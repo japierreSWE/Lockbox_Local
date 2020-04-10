@@ -27,3 +27,7 @@ Open Lockbox Local and click "Export boxes". Then, choose a directory in the dia
 ### How do I import boxes?
 
 Open Lockbox Local and click "Import boxes". Then, select an .lbf file. Every box in the file will be added to your boxes, as long as they have unique names.
+
+## Download links:
+* [Windows release (64-bit)](https://github.com/japierreSWE/Lockbox_Local/releases/download/0.9/Lockbox_Local_WIN64.zip)
+* [Mac release](https://github.com/japierreSWE/Lockbox_Local/releases/download/0.9/Lockbox.Local_Mac.zip)
