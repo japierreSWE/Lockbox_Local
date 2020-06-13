@@ -18,7 +18,7 @@ Lockbox Local performs the same functionality as Pluckeye Lockbox. Boxes are loc
 * Unlock and relock boxes
 * Import and export boxes
 
-The difference is that boxes do not self-destruct, so you can delay lock your passwords with no worries and no getting locked out of anything important to you.
+The difference is that boxes do not self-destruct, so you can delay lock your passwords with no worries of permanently losing them.
 
 ### How do I export boxes?
 
