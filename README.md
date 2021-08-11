@@ -22,7 +22,7 @@ The difference is that boxes do not self-destruct, so you can delay lock your pa
 
 ### How do I export boxes?
 
-Open Lockbox Local and click "Export boxes". Then, choose a directory in the dialog that appears. An .lbf file containing your boxes will be placed in.
+Open Lockbox Local and click "Export boxes". Then, choose a directory in the dialog that appears. An .lbf file containing your boxes will be placed in the directory.
 
 ### How do I import boxes?
 
