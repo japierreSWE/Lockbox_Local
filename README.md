@@ -1,33 +1,36 @@
 # Lockbox Local
 
-A local implementation of [Pluckeye Lockbox](https://lockbox.pluckeye.net/help) made using Java and SQLite.
+This is a local implementation of [Pluckeye Lockbox](https://lockbox.pluckeye.net/help), made using Java and SQLite.
 
-Pluckeye Lockbox is a web application that lets you store information in boxes that can only be accessed after a delay period, 
-which is useful if you need to hide a password for help with self-control.
+[Pluckeye Lockbox](https://lockbox.pluckeye.net/help) is a web application that lets you store information in "boxes" which can only be accessed after a delay period. This is useful if you need to hide a password from yourself, for help with self-control.
 
-The problem is that the boxes in Pluckeye Lockbox self-destruct after a year, deleting the data you put in them.
+Pluckeye Lockbox has been around for years, but it's a free service run by one person (Jon). He warns:
 
-**That means if you put an IOS password into a Pluckeye Lockbox and it self-destructed, you'd be locked out of your iPhone, with no way to get in.** That's where Lockbox Local comes in.
+"[Pluckeye Lockbox boxes] threaten to destruct mainly so that users do not assume the service will be around forever. You should not assume your data will be kept longer than 1 year, because the service is 100% free and run by one person. But, in practice, boxes frequently last longer than they claim to." [(Source.)](https://www.reddit.com/r/pluckeye/comments/mvyvmw/lockbox_i_typed_never_into_the_self_destruct_date/)
 
+Still: If you stored your iPhone password in a Pluckeye Lockbox, and the Pluckeye Lockbox server crashed, and all data was lost, you'd be locked out of your iPhone, with no way to get in.
+
+So, you might want to store an extra copy of your most valuable passwords on your own computer, using Lockbox Local.
 
 ## Description
 
-Lockbox Local performs the same functionality as Pluckeye Lockbox. Boxes are locally stored on your system instead of in the cloud, keeping your passwords under your control. That is, you can:
+Lockbox Local performs the same functionality as Pluckeye Lockbox. Each box is stored locally on your own computer, instead of in the cloud. This keeps your passwords under your control. You can:
 
-* Create and delete boxes
-* Unlock and relock boxes
-* Import and export boxes
+* Create and delete boxes.
+* Unlock and relock boxes.
+* Import and export boxes.
 
-The difference is that boxes do not self-destruct, so you can delay lock your passwords with no worries of permanently losing them.
+Boxes do not self-destruct, so you can delay-lock your passwords with no worries of permanently losing them.
 
-### How do I export boxes?
+### How to export boxes
 
 Open Lockbox Local and click "Export boxes". Then, choose a directory in the dialog that appears. An .lbf file containing your boxes will be placed in the directory.
 
-### How do I import boxes?
+### How to import boxes
 
 Open Lockbox Local and click "Import boxes". Then, select an .lbf file. Every box in the file will be added to your boxes, as long as they have unique names.
 
-## Download links:
+## Download links
+
 * [Windows release (64-bit)](https://github.com/japierreSWE/Lockbox_Local/releases/download/0.9/Lockbox_Local_WIN64.zip)
 * [Mac release](https://github.com/japierreSWE/Lockbox_Local/releases/download/0.9/Lockbox.Local_Mac.zip)
